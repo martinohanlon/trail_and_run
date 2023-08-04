@@ -1,0 +1,22 @@
+// Data export queries for http://overpass-turbo.eu/
+
+// for the map area shown
+[out:json][timeout:25];
+(  
+  way["piste:type"]({{bbox}});  
+  way["aerialway"]({{bbox}}); 
+);
+out body;
+>;
+out skel qt;
+
+// for a particular named area
+[out:json][timeout:25];
+area[name="Val Thorens"]->.a;
+(  
+  way["piste:type"](area.a);  
+  way["aerialway"](area.a);  
+);
+out body;
+>;
+out skel qt;
