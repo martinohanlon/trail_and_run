@@ -53,7 +53,7 @@ r.name = row.name,
 r.type = row.type,
 r.capacity = toInteger(row.capacity),
 r.occupancy = toInteger(row.occupancy),
-r.oneway = row.oneway;
+r.oneway = CASE row.oneway WHEN "yes" THEN true WHEN "no" THEN false ELSE null END;
 
 // set start and end positions on routes
 MATCH (r)<-[rp:ON_ROUTE]-(p)
