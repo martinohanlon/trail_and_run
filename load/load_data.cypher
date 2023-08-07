@@ -13,55 +13,47 @@ CREATE CONSTRAINT position_id
 FOR (p:Position) REQUIRE p.id IS UNIQUE;
 
 // routes and nodes
-CALL {
-    LOAD CSV WITH HEADERS
+LOAD CSV WITH HEADERS
 //    FROM 'https://drive.google.com/uc?export=download&id=1HXHph5-Rv35TP3YrNYyVjYXfx6k5Gubf'
-    FROM 'file:///test_route_data.csv'
-    AS row
+FROM 'file:///test_route_data.csv'
+AS row
 
-    MERGE (r:Route {id: toInteger(row.id)})
-    MERGE (p:Position {id: toInteger(row.node)})
-    MERGE (p)-[pr:ON_ROUTE]->(r)
-    SET pr.sequence = toInteger(row.sequence)
-};
+MERGE (r:Route {id: toInteger(row.id)})
+MERGE (p:Position {id: toInteger(row.node)})
+MERGE (p)-[pr:ON_ROUTE]->(r)
+SET pr.sequence = toInteger(row.sequence);
 
 // add node coordinates
-CALL {
-    LOAD CSV WITH HEADERS
-    // FROM 'https://drive.google.com/uc?export=download&id=1Xw7WfDYFGYMPAvqw9x92KVDLyyIK17zM'
-    FROM 'file:///test_position_data.csv'
-    AS row
-    MATCH (p:Position {id: toInteger(row.node)})
-    SET p.location = point({latitude: toFloat(row.lat), longitude: toFloat(row.lon)})
-};
+LOAD CSV WITH HEADERS
+// FROM 'https://drive.google.com/uc?export=download&id=1Xw7WfDYFGYMPAvqw9x92KVDLyyIK17zM'
+FROM 'file:///test_position_data.csv'
+AS row
+MATCH (p:Position {id: toInteger(row.node)})
+SET p.location = point({latitude: toFloat(row.lat), longitude: toFloat(row.lon)});
 
 // trails
-CALL {
-    LOAD CSV WITH HEADERS
-    // FROM 'https://drive.google.com/uc?export=download&id=1t5Ha5JSIH-v9H5lHpoUpKodTOdC7MISf'
-    FROM 'file:///test_trail_data.csv'
-    AS row
-    MATCH (r:Route {id: toInteger(row.id)})
-    SET r:Trail,
-    r.name = row.name,
-    r.type = row.type,
-    r.difficulty = row.difficulty
-};
+LOAD CSV WITH HEADERS
+// FROM 'https://drive.google.com/uc?export=download&id=1t5Ha5JSIH-v9H5lHpoUpKodTOdC7MISf'
+FROM 'file:///test_trail_data.csv'
+AS row
+MATCH (r:Route {id: toInteger(row.id)})
+SET r:Trail,
+r.name = row.name,
+r.type = row.type,
+r.difficulty = row.difficulty;
 
 // lifts
-CALL {
-    LOAD CSV WITH HEADERS
-    // FROM 'https://drive.google.com/uc?export=download&id=169Zy3w9k3GFwfq8MJsvRf5YPqfAA33Y0'
-    FROM 'file:///test_lift_data.csv'
-    AS row
-    MATCH (r:Route {id: toInteger(row.id)})
-    SET r:Lift,
-    r.name = row.name,
-    r.type = row.type,
-    r.capacity = toInteger(row.capacity),
-    r.occupancy = toInteger(row.occupancy),
-    r.oneway = row.oneway
-};
+LOAD CSV WITH HEADERS
+// FROM 'https://drive.google.com/uc?export=download&id=169Zy3w9k3GFwfq8MJsvRf5YPqfAA33Y0'
+FROM 'file:///test_lift_data.csv'
+AS row
+MATCH (r:Route {id: toInteger(row.id)})
+SET r:Lift,
+r.name = row.name,
+r.type = row.type,
+r.capacity = toInteger(row.capacity),
+r.occupancy = toInteger(row.occupancy),
+r.oneway = row.oneway;
 
 // set start and end positions on routes
 MATCH (r)<-[rp:ON_ROUTE]-(p)
@@ -93,5 +85,3 @@ CASE t.difficulty
     else 0
 END AS diff_score
 SET n.diff_score = diff_score;
-
-
