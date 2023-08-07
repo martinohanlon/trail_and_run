@@ -13,7 +13,7 @@ import csv
 # positions
 # id, lat, lon
 
-INPUT_FILE_NAME = 'data/flaine_test_data2.json'
+INPUT_FILE_NAME = 'data/flaine_test_data.json'
 OUTPUT_FILE_NAME = 'data/test_{}_data.csv'
 
 i = open(INPUT_FILE_NAME,'r')
