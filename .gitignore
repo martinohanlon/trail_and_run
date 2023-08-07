@@ -32,6 +32,3 @@ coverage
 
 # Generated documentation
 docs/_build
-
-# Generated data
-*.csv
